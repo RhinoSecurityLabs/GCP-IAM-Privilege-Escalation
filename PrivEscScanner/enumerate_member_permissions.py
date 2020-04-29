@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # ID of the current project (for Service Account checking)
-PROJECT_ID = 'test-project2-233001'
+PROJECT_ID = ''
 
 import json
 import google.oauth2.credentials
