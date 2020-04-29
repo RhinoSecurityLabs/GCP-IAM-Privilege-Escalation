@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 # ID of the current project (for Service Account checking)
-PROJECT_ID = ''
+PROJECT_ID = 'test-project2-233001'
 
+import json
 import google.oauth2.credentials
 import googleapiclient
 from googleapiclient import discovery
 from googleapiclient import errors as google_api_errors
-import json
 
 
 def get_project_ancestry(project_id, crm):
@@ -163,3 +163,6 @@ for sa_email in service_account_policies:
 
 with open('all_org_folder_proj_sa_permissions.json', 'w+') as f:
     json.dump(all_permissions, f, indent=4)
+
+print('\nDone!')
+print('Results were output to ./all_org_folder_proj_sa_permissions.json...')

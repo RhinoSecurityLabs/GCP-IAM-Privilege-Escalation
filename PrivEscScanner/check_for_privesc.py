@@ -129,3 +129,6 @@ with open('setIamPolicy_methods.txt', 'w+') as f:
                     if 'setIamPolicy' in permission:
                         print(f'    {permission}')
                         f.write(f'    {permission}\n')
+
+print('\nDone!')
+print('Results output to ./privesc_methods.txt and ./setIamPolicy_methods.txt...')
