@@ -18,7 +18,7 @@ def get_project_ancestry(project_id, crm):
 
 def get_iam_policies(project_ancestry, project_id, crm, crmv2):
     policies = {
-        'Organizations': {},
+        'Organizations': {},  # There should only ever be one Organization
         'Folders': {},
         'Projects': {}
     }
@@ -89,6 +89,7 @@ all_members = get_members_and_their_roles(policies)
 iam = discovery.build('iam', 'v1', credentials=credentials)
 
 all_permissions = {
+    'Ancestry': project_ancestry,
     'Organizations': {},
     'Folders': {},
     'Projects': {},
@@ -165,4 +166,4 @@ with open('all_org_folder_proj_sa_permissions.json', 'w+') as f:
     json.dump(all_permissions, f, indent=4)
 
 print('\nDone!')
-print('Results were output to ./all_org_folder_proj_sa_permissions.json...')
+print('Results were output to ./all_org_folder_proj_sa_permissions.json.')

@@ -4,95 +4,260 @@ import json
 
 # You can correlate these to the described methods on RhinoSecurityLabs.com
 methods_and_permissions = {
-    'UpdateIAMRole': [
-        'iam.roles.update'
-    ],
-    'CreateServiceAccountKey': [
-        'iam.serviceAccountKeys.create'
-    ],
-    'GetServiceAccountAccessToken': [
-        'iam.serviceAccounts.getAccessToken'
-    ],
-    'ServiceAccountImplicitDelegation': [
-        'iam.serviceAccounts.implicitDelegation'
-    ],
-    'ServiceAccountSignBlob': [
-        'iam.serviceAccounts.signBlob'
-    ],
-    'ServiceAccountSignJwt': [
-        'iam.serviceAccounts.signJwt'
-    ],
-    'SetOrgPolicyConstraints': [
-        'orgpolicy.policy.set'
-    ],
-    'CreateServiceAccountHMACKey': [
-        'storage.hmacKeys.create'
-    ],
-    'CreateDeploymentManagerDeployment': [
-        'deploymentmanager.deployments.create'
-    ],
-    'RCECloudBuildBuildServer': [
-        'cloudbuild.builds.create'
-    ],
-    'ExfilCloudFunctionCredsAuthCall': [
-        'cloudfunctions.functions.create',
-        'cloudfunctions.functions.sourceCodeSet',
-        'iam.serviceAccounts.actAs',
-        'cloudfunctions.functions.call'
-    ],
-    'ExfilCloudFunctionCredsUnauthCall': [
-        'cloudfunctions.functions.create',
-        'cloudfunctions.functions.sourceCodeSet',
-        'iam.serviceAccounts.actAs',
-        'cloudfunctions.functions.setIamPolicy'
-    ],
-    'UpdateCloudFunction': [
-        'cloudfunctions.functions.sourceCodeSet',
-        'cloudfunctions.functions.update',
-        'iam.serviceAccounts.actAs'
-    ],
-    'CreateGCEInstanceWithSA': [
-        'compute.disks.create',
-        'compute.instances.create',
-        'compute.instances.setMetadata',
-        'compute.instances.setServiceAccount',
-        'compute.subnetworks.use',
-        'compute.subnetworks.useExternalIp',
-        'iam.serviceAccounts.actAs'
-    ],
-    'ExfilCloudRunServiceUnauthCall': [
-        'run.services.create',
-        'iam.serviceaccounts.actAs',
-        'run.services.setIamPolicy'
-    ],
-    'ExfilCloudRunServiceAuthCall': [
-        'run.services.create',
-        'iam.serviceaccounts.actAs',
-        'run.routes.invoke'
-    ],
-    'CreateAPIKey': [
-        'serviceusage.apiKeys.create'
-    ],
-    'ViewExistingAPIKeys': [
-        'serviceusage.apiKeys.list'
-    ],
-    'SetOrgIAMPolicy': [
-        'resourcemanager.organizations.setIamPolicy'
-    ],
-    'SetFolderIAMPolicy': [
-        'resourcemanager.folders.setIamPolicy'
-    ],
-    'SetProjectIAMPolicy': [
-        'resourcemanager.projects.setIamPolicy'
-    ],
-    'SetServiceAccountIAMPolicy': [
-        'iam.serviceAccounts.setIamPolicy'
-    ],
-    'CreateCloudSchedulerHTTPRequest': [
-        'cloudscheduler.jobs.create',
-        'cloudscheduler.locations.list',
-        'iam.serviceAccounts.actAs'
-    ]
+    'UpdateIAMRole': {
+        'Permissions': [
+            'iam.roles.update'
+        ],
+        'Scope': [
+            'Organization',
+            'Project'
+        ]
+    },
+    'CreateServiceAccountKey': {
+        'Permissions': [
+            'iam.serviceAccountKeys.create'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'GetServiceAccountAccessToken': {
+        'Permissions': [
+            'iam.serviceAccounts.getAccessToken'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'ServiceAccountImplicitDelegation': {
+        'Permissions': [
+            'iam.serviceAccounts.implicitDelegation'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'ServiceAccountSignBlob': {
+        'Permissions': [
+            'iam.serviceAccounts.signBlob'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'ServiceAccountSignJwt': {
+        'Permissions': [
+            'iam.serviceAccounts.signJwt'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'SetOrgPolicyConstraints': {
+        'Permissions': [
+            'orgpolicy.policy.set'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'CreateServiceAccountHMACKey': {
+        'Permissions': [
+            'storage.hmacKeys.create'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'CreateDeploymentManagerDeployment': {
+        'Permissions': [
+            'deploymentmanager.deployments.create'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'RCECloudBuildBuildServer': {
+        'Permissions': [
+            'cloudbuild.builds.create'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'ExfilCloudFunctionCredsAuthCall': {
+        'Permissions': [
+            'cloudfunctions.functions.create',
+            'cloudfunctions.functions.sourceCodeSet',
+            'iam.serviceAccounts.actAs',
+            'cloudfunctions.functions.call'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'ExfilCloudFunctionCredsUnauthCall': {
+        'Permissions': [
+            'cloudfunctions.functions.create',
+            'cloudfunctions.functions.sourceCodeSet',
+            'iam.serviceAccounts.actAs',
+            'cloudfunctions.functions.setIamPolicy'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'UpdateCloudFunction': {
+        'Permissions': [
+            'cloudfunctions.functions.sourceCodeSet',
+            'cloudfunctions.functions.update',
+            'iam.serviceAccounts.actAs'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'CreateGCEInstanceWithSA': {
+        'Permissions': [
+            'compute.disks.create',
+            'compute.instances.create',
+            'compute.instances.setMetadata',
+            'compute.instances.setServiceAccount',
+            'compute.subnetworks.use',
+            'compute.subnetworks.useExternalIp',
+            'iam.serviceAccounts.actAs'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'ExfilCloudRunServiceUnauthCall': {
+        'Permissions': [
+            'run.services.create',
+            'iam.serviceaccounts.actAs',
+            'run.services.setIamPolicy'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'ExfilCloudRunServiceAuthCall': {
+        'Permissions': [
+            'run.services.create',
+            'iam.serviceaccounts.actAs',
+            'run.routes.invoke'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'CreateAPIKey': {
+        'Permissions': [
+            'serviceusage.apiKeys.create'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'ViewExistingAPIKeys': {
+        'Permissions': [
+            'serviceusage.apiKeys.list'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'SetOrgIAMPolicy': {
+        'Permissions': [
+            'resourcemanager.organizations.setIamPolicy'
+        ],
+        'Scope': [
+            'Organization'
+        ]
+    },
+    'SetFolderIAMPolicy': {
+        'Permissions': [
+            'resourcemanager.folders.setIamPolicy'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder'
+        ]
+    },
+    'SetProjectIAMPolicy': {
+        'Permissions': [
+            'resourcemanager.projects.setIamPolicy'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    },
+    'SetServiceAccountIAMPolicy': {
+        'Permissions': [
+            'iam.serviceAccounts.setIamPolicy'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project',
+            'ServiceAccount'
+        ]
+    },
+    'CreateCloudSchedulerHTTPRequest': {
+        'Permissions': [
+            'cloudscheduler.jobs.create',
+            'cloudscheduler.locations.list',
+            'iam.serviceAccounts.actAs'
+        ],
+        'Scope': [
+            'Organization',
+            'Folder',
+            'Project'
+        ]
+    }
 }
 
 
@@ -100,7 +265,7 @@ def check_privesc(permissions, resource_type, resource_id, member, f):
     print(f'{member} on {resource_type[:-1]} {resource_id}:')
     f.write(f'{member} on {resource_type[:-1]} {resource_id}:\n')
     for privesc_method in methods_and_permissions:
-        if set(methods_and_permissions[privesc_method]).issubset(set(permissions)):
+        if set(methods_and_permissions[privesc_method]['Permissions']).issubset(set(permissions)) and resource_type[:-1] in methods_and_permissions[privesc_method]['Scope']:
             print(f'    {privesc_method}')
             f.write(f'    {privesc_method}\n')
 
