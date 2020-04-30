@@ -167,3 +167,4 @@ with open('all_org_folder_proj_sa_permissions.json', 'w+') as f:
 
 print('\nDone!')
 print('Results were output to ./all_org_folder_proj_sa_permissions.json.')
+print('Next, run the check_for_privesc.py script!')
