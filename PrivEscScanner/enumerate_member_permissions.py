@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
+import sys
 # ID of the current project (for Service Account checking)
 PROJECT_ID = ''
+
+if not PROJECT_ID:
+    sys.exit('No value for PROJECT_ID supplied!')
 
 import json
 import google.oauth2.credentials
@@ -82,21 +86,20 @@ crmv2 = discovery.build('cloudresourcemanager', 'v2', credentials=credentials)
 project_ancestry = get_project_ancestry(PROJECT_ID, crm)
 policies = get_iam_policies(project_ancestry, PROJECT_ID, crm, crmv2)
 
-## Get all members and their roles from the org, folder, and project IAM policies
+# Get all members and their roles from the org, folder, and project IAM policies
 all_members = get_members_and_their_roles(policies)
 # print(json.dumps(all_members, indent=2))
 
 iam = discovery.build('iam', 'v1', credentials=credentials)
 
 all_permissions = {
-    'Ancestry': project_ancestry,
     'Organizations': {},
     'Folders': {},
     'Projects': {},
     'ServiceAccounts': {}
 }
 
-## Enumerate permissions for every role and associate them with each member
+# Enumerate permissions for every role and associate them with each member
 permissions_cache = {}  # Check to make sure this works, it didn't seem to save any time
 # Make it so this doesn't call GCP for the permissions of the same role multiple times
 for resource_type in all_members:
@@ -113,6 +116,8 @@ for resource_type in all_members:
                         res = iam.roles().get(name=role).execute()
                     except TypeError:
                         try:
+                            res = iam.organizations().roles().get(name=role).execute()
+                        except TypeError:
                             res = iam.projects().roles().get(name=role).execute()
                         except googleapiclient.errors.HttpError:
                             res = {}
@@ -161,6 +166,58 @@ for sa_email in service_account_policies:
                 permissions_cache[role] = role_perms
             all_permissions['ServiceAccounts'][sa_email][member].extend(role_perms)
             all_permissions['ServiceAccounts'][sa_email][member] = sorted(list(set(all_permissions['ServiceAccounts'][sa_email][member])))
+
+# Handle inherited permissions
+for resource_type in all_permissions:
+    if resource_type == 'Organizations':  # Apply to all lower levels (Folders, Projects, Service Accounts)
+        for resource_id in all_permissions[resource_type]:
+            for member in all_permissions[resource_type][resource_id]:
+                # Inherit permissions down to Folders, Projects, and service accounts
+                for resource_type2 in all_permissions:
+                    if resource_type2 == 'Organizations':
+                        continue
+                    for resource_id2 in all_permissions[resource_type2]:
+                        # Add to permissions or create new reference
+                        if all_permissions[resource_type2][resource_id2].get(member):
+                            all_permissions[resource_type2][resource_id2][member].extend(all_permissions[resource_type][resource_id][member])
+                            all_permissions[resource_type2][resource_id2][member] = sorted(list(set(all_permissions[resource_type2][resource_id2][member])))
+                        else:
+                            all_permissions[resource_type2][resource_id2][member] = sorted(all_permissions[resource_type][resource_id][member])
+    elif resource_type == 'Folders':  # Apply to Folders lower in the hierarchy, Projects, and Service Accounts
+        tmp = list(all_permissions[resource_type].keys())
+        tmp.reverse()
+        for i in range(len(tmp)):
+            for member in all_permissions[resource_type][tmp[i]]:
+                try:
+                    if all_permissions[resource_type][tmp[i+1]].get(member):
+                        all_permissions[resource_type][tmp[i+1]][member].extend(all_permissions[resource_type][tmp[i]][member])
+                        all_permissions[resource_type][tmp[i+1]][member] = sorted(list(set(all_permissions[resource_type][tmp[i+1]][member])))
+                    else:
+                        all_permissions[resource_type][tmp[i+1]][member] = sorted(all_permissions[resource_type][tmp[i]][member])
+                except IndexError:
+                    pass
+
+                for resource_type2 in ['Projects', 'ServiceAccounts']:
+                    for resource_id2 in all_permissions[resource_type2]:
+                        # Add to permissions or create new reference
+                        if all_permissions[resource_type2][resource_id2].get(member):
+                            all_permissions[resource_type2][resource_id2][member].extend(all_permissions[resource_type][tmp[i]][member])
+                            all_permissions[resource_type2][resource_id2][member] = sorted(list(set(all_permissions[resource_type2][resource_id2][member])))
+                        else:
+                            all_permissions[resource_type2][resource_id2][member] = sorted(all_permissions[resource_type][tmp[i]][member])
+    elif resource_type == 'Projects':  # Apply to just Service Accounts
+        # For each project...
+        for resource_id in all_permissions[resource_type]:
+            for member in all_permissions[resource_type][resource_id]:
+                # Inherit permissions down to all service accounts
+                for resource_id2 in all_permissions['ServiceAccounts']:
+                    # Add to permissions or create new reference
+                    if all_permissions['ServiceAccounts'][resource_id2].get(member):
+                        all_permissions['ServiceAccounts'][resource_id2][member].extend(all_permissions[resource_type][resource_id][member])
+                        all_permissions['ServiceAccounts'][resource_id2][member] = sorted(list(set(all_permissions['ServiceAccounts'][resource_id2][member])))
+                    else:
+                        all_permissions['ServiceAccounts'][resource_id2][member] = sorted(all_permissions[resource_type][resource_id][member])
+
 
 with open('all_org_folder_proj_sa_permissions.json', 'w+') as f:
     json.dump(all_permissions, f, indent=4)

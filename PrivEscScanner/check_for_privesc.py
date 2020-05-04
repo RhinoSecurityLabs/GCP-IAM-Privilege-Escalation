@@ -2,7 +2,7 @@
 
 import json
 
-# You can correlate these to the described methods on RhinoSecurityLabs.com
+# You can correlate these to the described methods on the RhinoSecurityLabs.com blog
 methods_and_permissions = {
     'UpdateIAMRole': {
         'Permissions': [
@@ -96,8 +96,7 @@ methods_and_permissions = {
         'Scope': [
             'Organization',
             'Folder',
-            'Project',
-            'ServiceAccount'
+            'Project'
         ]
     },
     'RCECloudBuildBuildServer': {
@@ -294,6 +293,7 @@ with open('setIamPolicy_methods.txt', 'w+') as f:
                     if 'setIamPolicy' in permission:
                         print(f'    {permission}')
                         f.write(f'    {permission}\n')
+    f.write('\n')
 
 print('\nDone!')
 print('Results output to ./privesc_methods.txt and ./setIamPolicy_methods.txt...')
