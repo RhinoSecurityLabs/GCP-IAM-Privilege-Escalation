@@ -1,11 +1,11 @@
 # IAM Privilege Escalation in GCP
 
 ## Table of Contents
-- The `ExploitScripts` Folder
-    - Contains exploit scripts for each of the privilege escalation methods outlined in the blog post, as well as a Cloud Function and Docker image for some of the methods that require them.
 - The `PrivEscScanner` Folder
     - Contains a permissions enumerator for all members in a GCP account and an associated privilege escalation scanner that reviews the permissions in search of privilege escalation vulnerabilities.
     - First run [enumerate_member_permissions.py](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/PrivEscScanner/enumerate_member_permissions.py) to enumerate all members and permissions and then run [check_for_privesc.py](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/PrivEscScanner/check_for_privesc.py) to check for privilege escalation in the environment.
+- The `ExploitScripts` Folder
+    - Contains exploit scripts for each of the privilege escalation methods outlined in the blog post, as well as a Cloud Function and Docker image for some of the methods that require them.
 
 For more information on these privilege escalation methods, how to exploit them, the permissions they require, and more, see the blog posts on our website: [Part 1](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/) and [Part 2](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-2/)
 
