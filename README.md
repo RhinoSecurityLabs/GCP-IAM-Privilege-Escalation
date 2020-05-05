@@ -9,7 +9,7 @@
 
 For more information on these privilege escalation methods, how to exploit them, the permissions they require, and more, see the blog posts on our website: [Part 1](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/) and [Part 2](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-2/)
 
-## Current List of GCP IAM Privilege Escalation Methods:
+## Current List of GCP IAM Privilege Escalation Methods
 
 1. `cloudbuilds.builds.create`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/cloudbuild.builds.create.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/working-as-intendedrce-to-iam-privilege-escalation-in-gcp)  
 2. `deploymentmanager.deployments.create`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/deploymentmanager.deployments.create.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/)
