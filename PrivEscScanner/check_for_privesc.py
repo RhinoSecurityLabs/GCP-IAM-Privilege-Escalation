@@ -261,14 +261,18 @@ methods_and_permissions = {
 
 
 def check_privesc(permissions, resource_type, resource_id, member, f):
-    print(f'{member} on {resource_type[:-1]} {resource_id}:')
-    f.write(f'{member} on {resource_type[:-1]} {resource_id}:\n')
+    first_method = True
     for privesc_method in methods_and_permissions:
         if set(methods_and_permissions[privesc_method]['Permissions']).issubset(set(permissions)) and resource_type[:-1] in methods_and_permissions[privesc_method]['Scope']:
+            if first_method:  # Only print out a user if there is a method associated with it
+                print(f'{member} on {resource_type[:-1]} {resource_id}:')
+                f.write(f'{member} on {resource_type[:-1]} {resource_id}:\n')
+                first_method = False
             print(f'    {privesc_method}')
             f.write(f'    {privesc_method}\n')
 
-    f.write('\n')
+    if first_method is False:
+        f.write('\n')
 
 
 # Output from enumerate_member_permissions.py
@@ -284,16 +288,20 @@ with open('privesc_methods.txt', 'w+') as f:
 
 print('Misc. setIamPolicy Permissions\n')
 with open('setIamPolicy_methods.txt', 'w+') as f:
+    first_method = True
     for resource_type in permissions:  # Org, Folder, Proj, SA
         for resource in permissions[resource_type]:  # IDs of Orgs, Folders, Projs, SAs
             for member in permissions[resource_type][resource]:  # Members with permissions on the current resource
-                print(f'{member} on {resource_type[:-1]} {resource}:')
-                f.write(f'{member} on {resource_type[:-1]} {resource}:\n')
                 for permission in permissions[resource_type][resource][member]:
                     if 'setIamPolicy' in permission:
+                        if first_method:
+                            print(f'{member} on {resource_type[:-1]} {resource}:')
+                            f.write(f'{member} on {resource_type[:-1]} {resource}:\n')
+                            first_method = False
                         print(f'    {permission}')
                         f.write(f'    {permission}\n')
-    f.write('\n')
+    if first_method is False:
+        f.write('\n')
 
 print('\nDone!')
 print('Results output to ./privesc_methods.txt and ./setIamPolicy_methods.txt...')
