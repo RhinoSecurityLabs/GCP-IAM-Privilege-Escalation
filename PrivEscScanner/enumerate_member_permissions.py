@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
 import json
 import argparse
 import google.oauth2.credentials
@@ -125,8 +124,6 @@ def main(args):
 
     # Actual policy for each SA
     service_account_policies = {}
-    # Actual permissions for each member
-    sa_member_permissions = {}
 
     request = iam.projects().serviceAccounts().list(name=f'projects/{args.project_id}')
     while True:
@@ -214,13 +211,13 @@ def main(args):
                         else:
                             all_permissions['ServiceAccounts'][resource_id2][member] = sorted(all_permissions[resource_type][resource_id][member])
 
-
     with open('all_org_folder_proj_sa_permissions.json', 'w+') as f:
         json.dump(all_permissions, f, indent=4)
 
     print('\nDone!')
     print('Results were output to ./all_org_folder_proj_sa_permissions.json.')
     print('Next, run the check_for_privesc.py script!')
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='This script will enumerate permissions for all members in the specified project and it\'s hierarchy.')

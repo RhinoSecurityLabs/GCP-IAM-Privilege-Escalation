@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
 import json
 
-# You can correlate these to the described methods on the RhinoSecurityLabs.com blog
+# You can correlate these to the described methods here: https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/ and here: https://rhinosecuritylabs.com/cloud-security/privilege-escalation-google-cloud-platform-part-2/
 methods_and_permissions = {
     'UpdateIAMRole': {
         'Permissions': [
@@ -275,9 +276,13 @@ def check_privesc(permissions, resource_type, resource_id, member, f):
         f.write('\n')
 
 
-# Output from enumerate_member_permissions.py
-with open('all_org_folder_proj_sa_permissions.json', 'r') as f:
-    permissions = json.load(f)
+try:
+    # Output from enumerate_member_permissions.py
+    with open('all_org_folder_proj_sa_permissions.json', 'r') as f:
+        permissions = json.load(f)
+except FileNotFoundError:
+    print('Could not find all_org_folder_proj_sa_permissions.json. Run "enumerate_member_permissions.py" first!')
+    sys.exit(1)
 
 print('All Privilege Escalation Methods\n')
 with open('privesc_methods.txt', 'w+') as f:
@@ -294,7 +299,7 @@ with open('setIamPolicy_methods.txt', 'w+') as f:
             for member in permissions[resource_type][resource]:  # Members with permissions on the current resource
                 for permission in permissions[resource_type][resource][member]:
                     if 'setIamPolicy' in permission:
-                        if first_method:
+                        if first_method:  # Only print out a user if there is a method associated with it
                             print(f'{member} on {resource_type[:-1]} {resource}:')
                             f.write(f'{member} on {resource_type[:-1]} {resource}:\n')
                             first_method = False
