@@ -2,6 +2,7 @@
 
 import sys
 import json
+import csv
 
 # You can correlate these to the described methods here: https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/ and here: https://rhinosecuritylabs.com/cloud-security/privilege-escalation-google-cloud-platform-part-2/
 methods_and_permissions = {
@@ -261,19 +262,25 @@ methods_and_permissions = {
 }
 
 
-def check_privesc(permissions, resource_type, resource_id, member, f):
+def check_privesc(permissions, resource_type, resource_id, member, f, csvwriter):
     first_method = True
+    third_column = ""
     for privesc_method in methods_and_permissions:
         if set(methods_and_permissions[privesc_method]['Permissions']).issubset(set(permissions)) and resource_type[:-1] in methods_and_permissions[privesc_method]['Scope']:
             if first_method:  # Only print out a user if there is a method associated with it
                 print(f'{member} on {resource_type[:-1]} {resource_id}:')
                 f.write(f'{member} on {resource_type[:-1]} {resource_id}:\n')
+                first_column = f'%s' % (member)
+                second_column = f'%s %s'  % (resource_type[:-1], resource_id)
                 first_method = False
             print(f'    {privesc_method}')
             f.write(f'    {privesc_method}\n')
+            third_column = third_column + f'%s\n' % (privesc_method)
 
     if first_method is False:
         f.write('\n')
+        row = [first_column, second_column, third_column]
+        csvwriter.writerow(row)
 
 
 try:
@@ -286,10 +293,14 @@ except FileNotFoundError:
 
 print('All Privilege Escalation Methods\n')
 with open('privesc_methods.txt', 'w+') as f:
-    for resource_type in permissions:  # Org, Folder, Proj, SA
-        for resource in permissions[resource_type]:  # IDs of Orgs, Folders, Projs, SAs
-            for member in permissions[resource_type][resource]:  # Members with permissions on the current resource
-                check_privesc(permissions[resource_type][resource][member], resource_type, resource, member, f)
+    with open('privesc_methods.csv', 'w', newline='') as csv_f:    
+        csvwriter = csv.writer(csv_f)
+        csv_headers = ['Principal', 'Resource', 'Privesc Methods']
+        csvwriter.writerow(csv_headers) 
+        for resource_type in permissions:  # Org, Folder, Proj, SA
+            for resource in permissions[resource_type]:  # IDs of Orgs, Folders, Projs, SAs
+                for member in permissions[resource_type][resource]:  # Members with permissions on the current resource
+                    check_privesc(permissions[resource_type][resource][member], resource_type, resource, member, f, csvwriter)
 
 print('Misc. setIamPolicy Permissions\n')
 with open('setIamPolicy_methods.txt', 'w+') as f:
@@ -309,4 +320,4 @@ with open('setIamPolicy_methods.txt', 'w+') as f:
         f.write('\n')
 
 print('\nDone!')
-print('Results output to ./privesc_methods.txt and ./setIamPolicy_methods.txt...')
+print('Results output to ./privesc_methods.txt, ./privesc_methods.csv and ./setIamPolicy_methods.txt...')

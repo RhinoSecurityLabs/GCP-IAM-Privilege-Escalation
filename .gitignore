@@ -501,4 +501,5 @@ paket-files/
 
 PrivEscScanner/all_org_folder_proj_sa_permissions.json
 PrivEscScanner/privesc_methods.txt
+PrivEscScanner/privesc_methods.csv
 PrivEscScanner/setIamPolicy_methods.txt
