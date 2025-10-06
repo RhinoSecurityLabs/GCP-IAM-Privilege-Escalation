@@ -11,7 +11,7 @@ For more information on these privilege escalation methods, how to exploit them,
 
 ## Current List of GCP IAM Privilege Escalation Methods
 
-1. `cloudbuilds.builds.create`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/cloudbuild.builds.create.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/working-as-intendedrce-to-iam-privilege-escalation-in-gcp)  
+1. `cloudbuilds.builds.create`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/cloudbuild.builds.create.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/iam-privilege-escalation-gcp-cloudbuild/)  
 2. `deploymentmanager.deployments.create`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/deploymentmanager.deployments.create.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/)
 3. `iam.roles.update`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/iam.roles.update.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/)
 4. `iam.serviceAccounts.getAccessToken`: [Script](https://github.com/RhinoSecurityLabs/GCP-IAM-Privilege-Escalation/blob/master/ExploitScripts/iam.serviceAccounts.getAccessToken.py) / [Blog Post](https://rhinosecuritylabs.com/gcp/privilege-escalation-google-cloud-platform-part-1/)
